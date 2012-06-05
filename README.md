@@ -1,9 +1,9 @@
 MySparkDataGrid
 ===============
 
-Spark DataGrid with renderers.
+Flex Spark DataGrid that contains some renderers.
 
--CheckBox
+-CheckBox (header/items)
 
 -DropBox
 

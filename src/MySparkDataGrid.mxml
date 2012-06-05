@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
                xmlns:s="library://ns.adobe.com/flex/spark" 
-               xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600"
+               xmlns:mx="library://ns.adobe.com/flex/mx"
                creationComplete="creationCompleteHandler(event)" xmlns:local="*">
     <fx:Script>
         <![CDATA[
@@ -21,8 +21,8 @@
              */ 
             public function initDataProvider():void {
                 var list:ArrayCollection = new ArrayCollection();
-                list.addItem({selected:false, name:"taro",   sex:"m", age:10, note:""});
-                list.addItem({selected:false, name:"jiro",   sex:"m", age:8,  note:""});
+                list.addItem({selected:false, name:"taro",   sex:"m", age:10, note:"hogehoge"});
+                list.addItem({selected:false, name:"jiro",   sex:"m", age:8,  note:"hoge"});
                 list.addItem({selected:false, name:"hanako", sex:"f", age:5,  note:""});
                 dataGrid.columnHeaderGroup.visibleSortIndicatorIndices = null; // clear sort arrows.
                 dataGrid.dataProvider = list;
@@ -50,7 +50,9 @@
         ]]>
     </fx:Script>
     
-    <s:VGroup width="100%">
+    <s:VGroup width="100%" paddingTop="10" paddingRight="10" paddingLeft="10" paddingBottom="10">
+
+        <s:Label text="Spark DataGrid"/>
 
         <s:DataGrid id="dataGrid" width="100%" editable="true" alternatingRowColors="{[0xF7F7F7, 0xFFFFFF]}">
             <s:columns>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+               xmlns:s="library://ns.adobe.com/flex/spark" 
+               xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600"
+               creationComplete="creationCompleteHandler(event)" xmlns:local="*">
+    <fx:Script>
+        <![CDATA[
+            import mx.collections.ArrayCollection;
+            import mx.events.FlexEvent;
+            
+            import spark.components.CheckBox;
+
+            [Bindable]
+            public var sexDropDownListData:ArrayCollection = new ArrayCollection(['m','f']);
+
+            private function creationCompleteHandler(event:FlexEvent):void {
+                initDataProvider();
+            }
+            /**
+             * Init DataGrid#dataProvider. 
+             */ 
+            public function initDataProvider():void {
+                var list:ArrayCollection = new ArrayCollection();
+                list.addItem({selected:false, name:"taro",   sex:"m", age:10, note:""});
+                list.addItem({selected:false, name:"jiro",   sex:"m", age:8,  note:""});
+                list.addItem({selected:false, name:"hanako", sex:"f", age:5,  note:""});
+                dataGrid.columnHeaderGroup.visibleSortIndicatorIndices = null; // clear sort arrows.
+                dataGrid.dataProvider = list;
+                _headerCheckBox.selected = false;
+            }
+
+            /**
+             * Set header CheckBox to controll.
+             */
+            public function set headerCheckBox(value:CheckBox):void {
+                _headerCheckBox = value;
+                _headerCheckBox.addEventListener(MouseEvent.CLICK, headerCheckBoxClickHandler);
+            }
+
+            private var _headerCheckBox:CheckBox;
+            /**
+             * Update all CheckBox#selected in DataGrid.
+             */
+            private function headerCheckBoxClickHandler(event:MouseEvent):void {
+                for each (var item:Object in dataGrid.dataProvider) {
+                    item.selected = CheckBox(event.currentTarget).selected;
+                }
+                ArrayCollection(dataGrid.dataProvider).refresh();
+            }
+        ]]>
+    </fx:Script>
+    
+    <s:VGroup width="100%">
+
+        <s:DataGrid id="dataGrid" width="100%" editable="true" alternatingRowColors="{[0xF7F7F7, 0xFFFFFF]}">
+            <s:columns>
+                <s:ArrayList>
+                    <!-- checkbox -->
+                    <s:GridColumn dataField="selected" headerText="check" sortable="false" editable="false" width="70">
+                        <s:headerRenderer>
+                            <fx:Component>
+                                <local:CheckBoxHeaderRenderer creationComplete="creationCompleteHandler(event)">
+                                    <fx:Script>
+                                        <![CDATA[
+                                            import mx.events.FlexEvent;
+                                            private function creationCompleteHandler(event:FlexEvent):void {
+                                                outerDocument.headerCheckBox = this.checkBox;
+                                            }
+                                        ]]>
+                                    </fx:Script>
+                                </local:CheckBoxHeaderRenderer>
+                            </fx:Component>
+                        </s:headerRenderer>
+                        <s:itemRenderer>
+                            <fx:Component>
+                                <s:GridItemRenderer>
+                                    <fx:Script>
+                                        override public function set data(value:Object):void {
+                                            super.data = value;
+                                            if (value) {
+                                                this.checkBox.selected = value.selected;
+                                            }
+                                        }
+                                    </fx:Script>
+                                    <s:HGroup horizontalAlign="center" verticalAlign="middle" width="100%" height="100%">
+                                        <s:CheckBox id="checkBox"/>
+                                    </s:HGroup>
+                                </s:GridItemRenderer>
+                            </fx:Component>
+                        </s:itemRenderer>
+                    </s:GridColumn>
+                    <!-- name -->
+                    <s:GridColumn dataField="name" headerText="name (not editable)" editable="false"/>
+                    <!-- sex -->
+                    <s:GridColumn dataField="sex" headerText="sex (selectable)">
+                        <s:itemEditor>
+                            <fx:Component>
+                                <local:DropDownListRenderer dataProvider="{outerDocument.sexDropDownListData}"/>
+                            </fx:Component>
+                        </s:itemEditor>
+                    </s:GridColumn>
+                    <!-- age -->
+                    <s:GridColumn dataField="age" headerText="age (restricted)">
+                        <s:itemEditor>
+                            <fx:Component>
+                                <local:GridItemTextEditor restrict="0-9" maxChars="3"/>
+                            </fx:Component>
+                        </s:itemEditor>
+                    </s:GridColumn>
+                    <!-- note -->
+                    <s:GridColumn dataField="note" headerText="note (editable)"/>
+                </s:ArrayList>
+            </s:columns>
+        </s:DataGrid>
+
+        <s:Button label="INIT" click="{initDataProvider();}"/>
+
+    </s:VGroup>
+</s:Application>

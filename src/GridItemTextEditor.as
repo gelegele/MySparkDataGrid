@@ -50,14 +50,12 @@ package
          */ 
         public function set restrict(value:String):void {
             this.callLater(function():void {_textInput.restrict = value;});
-            //_textInput.restrict = value;
         }
         /**
          * Set TextField#maxChars.
          */ 
         public function set maxChars(value:int):void {
             this.callLater(function():void {_textInput.maxChars = value;});
-            //_textInput.maxChars = value;
         }
     }
 }
